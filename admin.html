@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineWorld Admin</title>
+<link rel="stylesheet" href="admin.css">
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="admin.js" defer></script>
+</head>
+<body>
+<header>
+  <div class="logo">🎬 Cine<span>World</span></div>
+  <div>
+    <button id="menuBtn" onclick="toggleMenu()">☰</button>
+    <button class="secondary" onclick="toggleTheme()">🌙</button>
+  </div>
+</header>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+  <button onclick="showPage('movies',this)">🎬 Movies</button>
+  <button onclick="showPage('promotions',this)">🖼 Promotions</button>
+  <button onclick="showPage('settings',this)">⚙️ Settings</button>
+</aside>
+<main>
+<section id="dashboard" class="page active">
+<h2>Dashboard</h2><p>Welcome to CineWorld Admin Dashboard.</p>
+<div class="stats">
+<div class="stat"><p>Total Movies</p><h3 id="movieCount">0</h3></div>
+<div class="stat"><p>Total Promotions</p><h3 id="promotionCount">0</h3></div>
+<div class="stat"><p>Active Promotions</p><h3 id="activeCount">0</h3></div>
+<div class="stat"><p>Ad System</p><h3 id="adStatus">OFF</h3></div>
+</div>
+</section>
+<section id="movies" class="page">
+<h2>Movies Manager</h2>
+<button onclick="openMovieModal()">+ Add Movie</button>
+<input id="movieSearch" placeholder="Search movies..." oninput="renderMovies()">
+<div class="grid" id="movieList"></div>
+</section>
+<section id="promotions" class="page">
+<h2>Promotions Manager</h2>
+<button onclick="openBannerModal()">+ Add Promotion</button>
+<div class="grid" id="bannerList"></div>
+</section>
+<section id="settings" class="page">
+<h2>Settings</h2>
+<div class="panel"><h3>Appearance</h3><button onclick="toggleTheme()">Toggle Light / Dark Theme</button></div>
+<div class="panel" style="margin-top:15px">
+<h3>Database Backup</h3><button onclick="exportData()">Export Database JSON</button>
+<br><br><label>Import Database JSON</label>
+<input type="file" id="importFile" accept=".json">
+<button onclick="importData()">Import Database</button>
+</div>
+<div class="panel" style="margin-top:15px"><h3>Local Settings</h3><button class="danger" onclick="resetLocal()">Reset LocalStorage</button></div>
+</section>
+</main>
+</div>
+<div class="modal" id="movieModal"><div class="modal-box">
+<h2 id="movieModalTitle">Add Movie</h2>
+<form id="movieForm">
+<input type="hidden" id="movieId">
+<label>Movie Title</label><input id="title" required>
+<label>Description</label><textarea id="description" required></textarea>
+<label>Category</label>
+<select id="category" required>
+<option value="">Select Category</option><option>Action</option><option>Adventure</option><option>Comedy</option><option>Drama</option><option>Horror</option><option>Romance</option><option>Thriller</option><option>Sci-Fi</option><option>Animation</option><option>Documentary</option><option>Other</option>
+</select>
+<label>Language</label><input id="language" required>
+<label>Tags</label><input id="tags" placeholder="Trending, Popular">
+<label>Poster URL</label><input id="poster" type="url" required oninput="previewPoster()">
+<img id="posterPreview" class="preview" alt="Poster preview">
+<label>Video URL</label><input id="video" type="url" required>
+<button type="submit">Save Movie</button>
+<button type="button" class="secondary" onclick="closeModal('movieModal')">Cancel</button>
+</form>
+</div></div>
+<div class="modal" id="bannerModal"><div class="modal-box">
+<h2 id="bannerModalTitle">Add Promotion</h2>
+<form id="bannerForm">
+<input type="hidden" id="bannerId">
+<label>Image URL</label><input id="bannerImage" type="url" required>
+<label>Redirect Link</label><input id="bannerLink" type="url" required>
+<label>Status</label><select id="bannerStatus"><option value="true">ON</option><option value="false">OFF</option></select>
+<button type="submit">Save Promotion</button>
+<button type="button" class="secondary" onclick="closeModal('bannerModal')">Cancel</button>
+</form>
+</div></div>
+<div class="alert" id="alert"></div>
+</body>
+</html>
